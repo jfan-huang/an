@@ -1,0 +1,344 @@
+/**
+ * 
+ */
+package org.an.log.helpers;
+
+import java.io.PrintStream;
+
+import org.an.log.Logger;
+
+/**
+ * <br>
+ * <br>
+ * 
+ * @author JFan - 2014年10月30日 上午10:38:52
+ */
+public class SysoutLogger implements Logger {
+
+	private PrintStream out = System.out;
+	private PrintStream err = System.err;
+
+	private void out(String msg, Throwable t, Object... objects) {
+		PrintStream ps = (null != t ? err : out);
+
+		if (null == objects || 0 >= objects.length)
+			ps.println(msg);
+		else
+			ps.printf(msg, objects);
+
+		if (null != t)
+			t.printStackTrace(ps);
+	}
+
+	private void outt(String msg, Throwable t) {
+		PrintStream ps = (null != t ? err : out);
+		ps.println(msg);
+		t.printStackTrace(ps);
+	}
+
+	/*
+	 * （非 Javadoc）
+	 * 
+	 * @see org.an.log.Logger#isTraceEnabled()
+	 */
+	@Override
+	public boolean isTraceEnabled() {
+		return true;
+	}
+
+	/*
+	 * （非 Javadoc）
+	 * 
+	 * @see org.an.log.Logger#trace(java.lang.String)
+	 */
+	@Override
+	public void trace(String msg) {
+		outt(msg, null);
+	}
+
+	/*
+	 * （非 Javadoc）
+	 * 
+	 * @see org.an.log.Logger#trace(java.lang.String, java.lang.Object)
+	 */
+	@Override
+	public void trace(String format, Object arg) {
+		out(format, null, arg);
+	}
+
+	/*
+	 * （非 Javadoc）
+	 * 
+	 * @see org.an.log.Logger#trace(java.lang.String, java.lang.Object,
+	 * java.lang.Object)
+	 */
+	@Override
+	public void trace(String format, Object arg1, Object arg2) {
+		out(format, null, arg1, arg2);
+	}
+
+	/*
+	 * （非 Javadoc）
+	 * 
+	 * @see org.an.log.Logger#trace(java.lang.String, java.lang.Object[])
+	 */
+	@Override
+	public void trace(String format, Object[] argArray) {
+		out(format, null, argArray);
+	}
+
+	/*
+	 * （非 Javadoc）
+	 * 
+	 * @see org.an.log.Logger#trace(java.lang.String, java.lang.Throwable)
+	 */
+	@Override
+	public void trace(String msg, Throwable t) {
+		outt(msg, t);
+	}
+
+	/*
+	 * （非 Javadoc）
+	 * 
+	 * @see org.an.log.Logger#isDebugEnabled()
+	 */
+	@Override
+	public boolean isDebugEnabled() {
+		return true;
+	}
+
+	/*
+	 * （非 Javadoc）
+	 * 
+	 * @see org.an.log.Logger#debug(java.lang.String)
+	 */
+	@Override
+	public void debug(String msg) {
+		outt(msg, null);
+	}
+
+	/*
+	 * （非 Javadoc）
+	 * 
+	 * @see org.an.log.Logger#debug(java.lang.String, java.lang.Object)
+	 */
+	@Override
+	public void debug(String format, Object arg) {
+		out(format, null, arg);
+	}
+
+	/*
+	 * （非 Javadoc）
+	 * 
+	 * @see org.an.log.Logger#debug(java.lang.String, java.lang.Object,
+	 * java.lang.Object)
+	 */
+	@Override
+	public void debug(String format, Object arg1, Object arg2) {
+		out(format, null, arg1, arg2);
+	}
+
+	/*
+	 * （非 Javadoc）
+	 * 
+	 * @see org.an.log.Logger#debug(java.lang.String, java.lang.Object[])
+	 */
+	@Override
+	public void debug(String format, Object[] argArray) {
+		out(format, null, argArray);
+	}
+
+	/*
+	 * （非 Javadoc）
+	 * 
+	 * @see org.an.log.Logger#debug(java.lang.String, java.lang.Throwable)
+	 */
+	@Override
+	public void debug(String msg, Throwable t) {
+		outt(msg, t);
+	}
+
+	/*
+	 * （非 Javadoc）
+	 * 
+	 * @see org.an.log.Logger#isInfoEnabled()
+	 */
+	@Override
+	public boolean isInfoEnabled() {
+		return true;
+	}
+
+	/*
+	 * （非 Javadoc）
+	 * 
+	 * @see org.an.log.Logger#info(java.lang.String)
+	 */
+	@Override
+	public void info(String msg) {
+		outt(msg, null);
+	}
+
+	/*
+	 * （非 Javadoc）
+	 * 
+	 * @see org.an.log.Logger#info(java.lang.String, java.lang.Object)
+	 */
+	@Override
+	public void info(String format, Object arg) {
+		out(format, null, arg);
+	}
+
+	/*
+	 * （非 Javadoc）
+	 * 
+	 * @see org.an.log.Logger#info(java.lang.String, java.lang.Object,
+	 * java.lang.Object)
+	 */
+	@Override
+	public void info(String format, Object arg1, Object arg2) {
+		out(format, null, arg1, arg2);
+	}
+
+	/*
+	 * （非 Javadoc）
+	 * 
+	 * @see org.an.log.Logger#info(java.lang.String, java.lang.Object[])
+	 */
+	@Override
+	public void info(String format, Object[] argArray) {
+		out(format, null, argArray);
+	}
+
+	/*
+	 * （非 Javadoc）
+	 * 
+	 * @see org.an.log.Logger#info(java.lang.String, java.lang.Throwable)
+	 */
+	@Override
+	public void info(String msg, Throwable t) {
+		outt(msg, t);
+	}
+
+	/*
+	 * （非 Javadoc）
+	 * 
+	 * @see org.an.log.Logger#isWarnEnabled()
+	 */
+	@Override
+	public boolean isWarnEnabled() {
+		return true;
+	}
+
+	/*
+	 * （非 Javadoc）
+	 * 
+	 * @see org.an.log.Logger#warn(java.lang.String)
+	 */
+	@Override
+	public void warn(String msg) {
+		outt(msg, null);
+	}
+
+	/*
+	 * （非 Javadoc）
+	 * 
+	 * @see org.an.log.Logger#warn(java.lang.String, java.lang.Object)
+	 */
+	@Override
+	public void warn(String format, Object arg) {
+		out(format, null, arg);
+	}
+
+	/*
+	 * （非 Javadoc）
+	 * 
+	 * @see org.an.log.Logger#warn(java.lang.String, java.lang.Object[])
+	 */
+	@Override
+	public void warn(String format, Object[] argArray) {
+		out(format, null, argArray);
+	}
+
+	/*
+	 * （非 Javadoc）
+	 * 
+	 * @see org.an.log.Logger#warn(java.lang.String, java.lang.Object,
+	 * java.lang.Object)
+	 */
+	@Override
+	public void warn(String format, Object arg1, Object arg2) {
+		out(format, null, arg1, arg2);
+	}
+
+	/*
+	 * （非 Javadoc）
+	 * 
+	 * @see org.an.log.Logger#warn(java.lang.String, java.lang.Throwable)
+	 */
+	@Override
+	public void warn(String msg, Throwable t) {
+		outt(msg, t);
+	}
+
+	/*
+	 * （非 Javadoc）
+	 * 
+	 * @see org.an.log.Logger#isErrorEnabled()
+	 */
+	@Override
+	public boolean isErrorEnabled() {
+		return true;
+	}
+
+	/*
+	 * （非 Javadoc）
+	 * 
+	 * @see org.an.log.Logger#error(java.lang.String)
+	 */
+	@Override
+	public void error(String msg) {
+		outt(msg, null);
+	}
+
+	/*
+	 * （非 Javadoc）
+	 * 
+	 * @see org.an.log.Logger#error(java.lang.String, java.lang.Object)
+	 */
+	@Override
+	public void error(String format, Object arg) {
+		out(format, null, arg);
+	}
+
+	/*
+	 * （非 Javadoc）
+	 * 
+	 * @see org.an.log.Logger#error(java.lang.String, java.lang.Object,
+	 * java.lang.Object)
+	 */
+	@Override
+	public void error(String format, Object arg1, Object arg2) {
+		out(format, null, arg1, arg2);
+	}
+
+	/*
+	 * （非 Javadoc）
+	 * 
+	 * @see org.an.log.Logger#error(java.lang.String, java.lang.Object[])
+	 */
+	@Override
+	public void error(String format, Object[] argArray) {
+		out(format, null, argArray);
+	}
+
+	/*
+	 * （非 Javadoc）
+	 * 
+	 * @see org.an.log.Logger#error(java.lang.String, java.lang.Throwable)
+	 */
+	@Override
+	public void error(String msg, Throwable t) {
+		outt(msg, t);
+	}
+
+}

@@ -1,0 +1,34 @@
+/**
+ * 
+ */
+package org.jfan.an.track;
+
+/**
+ * <br>
+ * <br>
+ * 
+ * @author JFan - 2014年10月30日 下午3:50:01
+ */
+public interface TrackFunc {
+
+	/**
+	 * 未来运行的一个时间值（毫秒）
+	 */
+	public long timeMillis();
+
+	/**
+	 * 如果放置的任务运行时间，已经过期，这里决定是否立即执行（false：抛弃任务）
+	 */
+	public boolean pasc();
+
+	/**
+	 * 任务主体
+	 */
+	public void onRun();
+
+	/**
+	 * 任务主体--发生异常时
+	 */
+	public void onError(Throwable t);
+
+}
