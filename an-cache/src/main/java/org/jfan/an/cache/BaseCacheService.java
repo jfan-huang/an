@@ -1,6 +1,5 @@
 package org.jfan.an.cache;
 
-
 /**
  * 缓存服务基类 <br>
  * <br>
@@ -10,42 +9,42 @@ package org.jfan.an.cache;
 public interface BaseCacheService {
 
 	// 秒
-	public static final int EXP_3_S = 3;
-	public static final int EXP_5_S = 5;
-	public static final int EXP_15_S = 15;
-	public static final int EXP_30_S = 30;
-	public static final int EXP_45_S = 45;
+	public static final int EXP_3_S  = 3;
+	public static final int EXP_5_S  = 5;
+	public static final int EXP_15_S = EXP_5_S * 3;
+	public static final int EXP_30_S = EXP_5_S * 6;
+	public static final int EXP_45_S = EXP_5_S * 9;
 
 	// 分钟
-	public static final int EXP_1_M = 60;
-	public static final int EXP_1_M_30_S = 90;
-	public static final int EXP_2_M = 120;
-	public static final int EXP_2_M_30_S = 150;
-	public static final int EXP_3_M = 180;
-	public static final int EXP_5_M = 300;
-	public static final int EXP_10_M = 600;
-	public static final int EXP_15_M = 900;
-	public static final int EXP_30_M = 1800;
-	public static final int EXP_45_M = 2700;
+	public static final int EXP_1_M      = EXP_30_S * 2;
+	public static final int EXP_1_M_30_S = EXP_30_S * 3;
+	public static final int EXP_2_M      = EXP_30_S * 4;
+	public static final int EXP_2_M_30_S = EXP_30_S * 5;
+	public static final int EXP_3_M      = EXP_30_S * 6;
+	public static final int EXP_5_M      = EXP_1_M * 5;
+	public static final int EXP_10_M     = EXP_5_M * 2;
+	public static final int EXP_15_M     = EXP_5_M * 3;
+	public static final int EXP_30_M     = EXP_5_M * 6;
+	public static final int EXP_45_M     = EXP_5_M * 9;
 
 	// 小时
-	public static final int EXP_1_H = 3600;
-	public static final int EXP_1H_30_M = 5400;
-	public static final int EXP_2_H = 7200;
-	public static final int EXP_2H_30_M = 9000;
-	public static final int EXP_3_H = 10800;
+	public static final int EXP_1_H     = EXP_30_M * 2;
+	public static final int EXP_1H_30_M = EXP_30_M * 3;
+	public static final int EXP_2_H     = EXP_30_M * 4;
+	public static final int EXP_2H_30_M = EXP_30_M * 5;
+	public static final int EXP_3_H     = EXP_30_M * 6;
 
 	// 天
-	public static final int EXP_1_D = 86400;
+	public static final int EXP_1_D = EXP_3_H * 8;
 	public static final int EXP_2_D = EXP_1_D * 2;
 	public static final int EXP_3_D = EXP_1_D * 3;
 	public static final int EXP_5_D = EXP_1_D * 5;
 	public static final int EXP_7_D = EXP_1_D * 7;
 
 	/**
-	 * 默认7天，Memcache最大时效时间
+	 * 默认30天，Memcache最大时效时间
 	 */
-	public static final int DEF_EXP = EXP_7_D;
+	public static final int DEF_EXP = EXP_1_D * 30;
 
 	public static final String DEFAULT_CHARSET = "UTF-8";
 
