@@ -102,8 +102,8 @@ public class EhCacheServiceImpl implements BaseCacheService {
 
 	private Cache cache() {
 		if (null == cache) {
+			lock.lock();
 			try {
-				lock.lock();
 				if (null == cache) {
 					String cacheName = CacheManager.DEFAULT_NAME;
 					CacheManager cm = CacheManager.getInstance();
