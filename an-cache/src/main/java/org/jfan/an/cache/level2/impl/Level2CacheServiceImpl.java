@@ -30,23 +30,16 @@ public class Level2CacheServiceImpl implements Level2CacheService {
 	// ####
 	// ##对本地缓存的操作
 
-	/*
-	 * （非 Javadoc）
-	 * 
-	 * @see
-	 * org.an.cache.base.level2.Level2CacheService#putLocal(java.lang.String,
-	 * java.lang.Object, int)
+	/**
+	 * {@inheritDoc} <br>
 	 */
 	@Override
 	public <V> boolean putLocal(String key, V value, int localExp) {
 		return localCache.set(key, (Object) value, localExp);
 	}
 
-	/*
-	 * （非 Javadoc）
-	 * 
-	 * @see
-	 * org.an.cache.base.level2.Level2CacheService#getLocal(java.lang.String)
+	/**
+	 * {@inheritDoc} <br>
 	 */
 	@Override
 	public <V> V getLocal(String key) {
@@ -54,11 +47,8 @@ public class Level2CacheServiceImpl implements Level2CacheService {
 		return (V) object;
 	}
 
-	/*
-	 * （非 Javadoc）
-	 * 
-	 * @see
-	 * org.an.cache.base.level2.Level2CacheService#deleteLocal(java.lang.String)
+	/**
+	 * {@inheritDoc} <br>
 	 */
 	@Override
 	public boolean deleteLocal(String key) {
@@ -68,23 +58,16 @@ public class Level2CacheServiceImpl implements Level2CacheService {
 	// ####
 	// ##对集中式缓存的操作
 
-	/*
-	 * （非 Javadoc）
-	 * 
-	 * @see
-	 * org.an.cache.base.level2.Level2CacheService#putAmass(java.lang.String,
-	 * java.lang.Object, int)
+	/**
+	 * {@inheritDoc} <br>
 	 */
 	@Override
 	public <V> boolean putAmass(String key, V value, int amassExp) {
 		return amassCache.set(key, (Object) value, amassExp);
 	}
 
-	/*
-	 * （非 Javadoc）
-	 * 
-	 * @see
-	 * org.an.cache.base.level2.Level2CacheService#getAmass(java.lang.String)
+	/**
+	 * {@inheritDoc} <br>
 	 */
 	@Override
 	public <V> V getAmass(String key) {
@@ -92,11 +75,8 @@ public class Level2CacheServiceImpl implements Level2CacheService {
 		return (V) object;
 	}
 
-	/*
-	 * （非 Javadoc）
-	 * 
-	 * @see
-	 * org.an.cache.base.level2.Level2CacheService#deleteAmass(java.lang.String)
+	/**
+	 * {@inheritDoc} <br>
 	 */
 	@Override
 	public boolean deleteAmass(String key) {
@@ -104,12 +84,35 @@ public class Level2CacheServiceImpl implements Level2CacheService {
 	}
 
 	// ####
+	// ##两层缓存操作私有的set方法
+
+	/**
+	 * {@inheritDoc} <br>
+	 */
+	@Override
+	public void setExpLimit(ExpLimit expLimit) {
+		if (null != this.expLimit) {
+			int amassExp = 60;
+			int localExp = this.expLimit.localExp(amassExp);
+			int nowLocalExp = expLimit.localExp(amassExp);
+			logger.warn("The '{}' timeLimit Reset; test, old: {} -- {}, now: {} -- {}.", this, amassExp, localExp, amassExp, nowLocalExp);
+		}
+		this.expLimit = expLimit;
+	}
+
+	/**
+	 * {@inheritDoc} <br>
+	 */
+	@Override
+	public void setNotice(LocalNotFoundNotice notice) {
+		this.notice = notice;
+	}
+
+	// ####
 	// ##两层缓存操作
 
-	/*
-	 * （非 Javadoc）
-	 * 
-	 * @see org.an.cache.base.BaseCacheService#get(java.lang.String)
+	/**
+	 * {@inheritDoc} <br>
 	 */
 	@Override
 	public <V> V get(String key) {
@@ -123,11 +126,8 @@ public class Level2CacheServiceImpl implements Level2CacheService {
 		return v;
 	}
 
-	/*
-	 * （非 Javadoc）
-	 * 
-	 * @see org.an.cache.base.level2.Level2CacheService#get(java.lang.String,
-	 * int)
+	/**
+	 * {@inheritDoc} <br>
 	 */
 	public <V> V get(String key, int localExp) {
 		V v = getLocal(key);
@@ -141,20 +141,16 @@ public class Level2CacheServiceImpl implements Level2CacheService {
 		return v;
 	}
 
-	/*
-	 * （非 Javadoc）
-	 * 
-	 * @see org.an.cache.base.BaseCacheService#isExist(java.lang.String)
+	/**
+	 * {@inheritDoc} <br>
 	 */
 	@Override
 	public boolean isExist(String key) {
 		return null != get(key);
 	}
 
-	/*
-	 * （非 Javadoc）
-	 * 
-	 * @see org.an.cache.base.BaseCacheService#delete(java.lang.String)
+	/**
+	 * {@inheritDoc} <br>
 	 */
 	@Override
 	public boolean delete(String key) {
@@ -164,67 +160,29 @@ public class Level2CacheServiceImpl implements Level2CacheService {
 		return true;
 	}
 
-	/*
-	 * （非 Javadoc）
-	 * 
-	 * @see org.an.cache.base.BaseCacheService#set(java.lang.String,
-	 * java.lang.Object)
+	/**
+	 * {@inheritDoc} <br>
 	 */
 	@Override
 	public <V> boolean set(String key, V value) {
 		return set(key, value, DEF_EXP, expLimit());
 	}
 
-	/*
-	 * （非 Javadoc）
-	 * 
-	 * @see org.an.cache.base.BaseCacheService#set(java.lang.String,
-	 * java.lang.Object, int)
+	/**
+	 * {@inheritDoc} <br>
 	 */
 	@Override
 	public boolean set(String key, Object value, int exp) {
 		return set(key, value, exp, expLimit());
 	}
 
-	/*
-	 * （非 Javadoc）
-	 * 
-	 * @see org.an.cache.base.level2.Level2CacheService#set(java.lang.String,
-	 * java.lang.Object, int, org.an.cache.base.level2.ExpLimit)
+	/**
+	 * {@inheritDoc} <br>
 	 */
 	@Override
 	public boolean set(String key, Object value, int exp, ExpLimit expLimit) {
 		int local = expLimit.localExp(exp);
 		return set(key, value, local, exp);
-	}
-
-	/*
-	 * （非 Javadoc）
-	 * 
-	 * @see org.an.cache.base.level2.Level2CacheService#setExpLimit(org.an.cache
-	 * .base.level2.ExpLimit)
-	 */
-	@Override
-	public void setExpLimit(ExpLimit expLimit) {
-		if (null != this.expLimit) {
-			int amassExp = 60;
-			int localExp = this.expLimit.localExp(amassExp);
-			int nowLocalExp = expLimit.localExp(amassExp);
-			logger.warn("The '{}' timeLimit Reset; test, old: {} -- {}, now: {} -- {}.", this, amassExp, localExp, amassExp, nowLocalExp);
-		}
-		this.expLimit = expLimit;
-	}
-
-	/*
-	 * （非 Javadoc）
-	 * 
-	 * @see
-	 * org.an.cache.level2.Level2CacheService#setNotice(org.an.cache.level2.
-	 * LocalNotFoundNotice)
-	 */
-	@Override
-	public void setNotice(LocalNotFoundNotice notice) {
-		this.notice = notice;
 	}
 
 	// ####
