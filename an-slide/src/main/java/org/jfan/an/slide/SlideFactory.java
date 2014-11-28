@@ -20,6 +20,9 @@ import org.jfan.an.slide.impl.QueueSlide;
  */
 public final class SlideFactory {
 
+	private SlideFactory() {
+	}
+
 	/**
 	 * 使用本地线程池实现，指定可同时执行的数量 <br>
 	 * 只适合单机情况<br>
