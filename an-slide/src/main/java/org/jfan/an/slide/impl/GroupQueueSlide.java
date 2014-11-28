@@ -1,36 +1,43 @@
 /**
  * 
  */
-package org.jfan.an.slide.impl.abs;
+package org.jfan.an.slide.impl;
 
 import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.http.util.Args;
 import org.jfan.an.cache.AddCacheService;
 import org.jfan.an.slide.SlideCallback;
 
 /**
+ * 通过阻塞队列，实现‘滑梯’，<b>适合集群环境</b><br>
+ * 一次只能有一个在执行<br>
  * <br>
- * <br>
+ * 通过集中式缓存的ADD功能，实现抢占任务点，抢不到的在指定间隔之后再抢<br>
  * 
- * @author JFan - 2014年11月26日 下午6:46:26
+ * @author JFan - 2014年11月26日 下午6:11:30
  */
-public abstract class OnlyAbstractSlide extends AbstractSlide {
+public class GroupQueueSlide extends QueueSlide {
 
-	private String key = "slide_only_" + this.hashCode();
+	private String key = "slide_q_only_" + this.hashCode();
 	private AddCacheService cacheService;
-	private long intervalMilliseconds;// 隔多久检测一次
+	private long intervalMilliseconds;
 
+	/**
+	 * {@inheritDoc} <br>
+	 */
+	@Override
 	protected <T> Callable<T> toCallable(final SlideCallback<T> task) {
 		return new Callable<T>() {
 			@Override
 			public T call() throws Exception {
-				boolean add = cacheService.add(key, 1);
+				int exp = (int) TimeUnit.MILLISECONDS.toSeconds(intervalMilliseconds) - 1;// 早1秒失效
+				boolean add = cacheService.add(key, 1, exp);
 				if (add)
 					return task.call();
-				else
-					Thread.sleep(intervalMilliseconds);// TODO 寻找更好的方案
 
+				Thread.sleep(intervalMilliseconds);// TODO 寻找更好的方案
 				return call();
 			}
 		};

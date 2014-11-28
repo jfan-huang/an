@@ -8,8 +8,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import org.jfan.an.cache.AddCacheService;
 import org.jfan.an.slide.impl.ExecutorPoolSlide;
-import org.jfan.an.slide.impl.OnlyExecutorPoolSlide;
-import org.jfan.an.slide.impl.OnlyQueueSlide;
+import org.jfan.an.slide.impl.GroupExecutorPoolSlide;
+import org.jfan.an.slide.impl.GroupQueueSlide;
 import org.jfan.an.slide.impl.QueueSlide;
 
 /**
@@ -50,8 +50,9 @@ public final class SlideFactory {
 	 * 
 	 * @param threadNum 可同时执行的数量
 	 */
-	public static final Slide newExecutorPoolOnly(int threadNum, AddCacheService cacheService) {
-		OnlyExecutorPoolSlide slide = new OnlyExecutorPoolSlide();
+	public static final Slide newExecutorPoolOnly(int threadNum, AddCacheService cacheService, long intervalMilliseconds) {
+		GroupExecutorPoolSlide slide = new GroupExecutorPoolSlide();
+		slide.setIntervalMilliseconds(intervalMilliseconds);
 		slide.setCacheService(cacheService);
 		slide.setThreadNum(threadNum);
 		return slide;
@@ -63,8 +64,9 @@ public final class SlideFactory {
 	 * 
 	 * @param executor 线程池实现
 	 */
-	public static final Slide newExecutorPoolOnly(ExecutorService executor, AddCacheService cacheService) {
-		OnlyExecutorPoolSlide slide = new OnlyExecutorPoolSlide();
+	public static final Slide newExecutorPoolOnly(ExecutorService executor, AddCacheService cacheService, long intervalMilliseconds) {
+		GroupExecutorPoolSlide slide = new GroupExecutorPoolSlide();
+		slide.setIntervalMilliseconds(intervalMilliseconds);
 		slide.setCacheService(cacheService);
 		slide.setExecutor(executor);
 		return slide;
@@ -84,8 +86,9 @@ public final class SlideFactory {
 	 * 使用队列实现，一次只能处理一个任务<br>
 	 * 适合集群情况<br>
 	 */
-	public static final Slide newQueueOnly(AddCacheService cacheService) {
-		OnlyQueueSlide slide = new OnlyQueueSlide();
+	public static final Slide newQueueOnly(AddCacheService cacheService, long intervalMilliseconds) {
+		GroupQueueSlide slide = new GroupQueueSlide();
+		slide.setIntervalMilliseconds(intervalMilliseconds);
 		slide.setQueue(new LinkedBlockingQueue<Runnable>());
 		slide.setCacheService(cacheService);
 		return slide;

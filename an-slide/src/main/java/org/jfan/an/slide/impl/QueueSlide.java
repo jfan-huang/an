@@ -14,8 +14,8 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.jfan.an.slide.impl.abs.AbstractSlide;
 
 /**
- * <br>
- * <br>
+ * 通过阻塞队列，实现‘滑梯’，<b>只适合单机</b><br>
+ * 一次只能有一个在执行<br>
  * 
  * @author JFan - 2014年11月26日 下午6:11:30
  */
@@ -53,8 +53,8 @@ public class QueueSlide extends AbstractSlide {
 	private void execute(Runnable command) {
 		if (!init) {
 			// Args.notNull(queue, "'queue'");// 调用execute方法之前，已经往 queue中塞入东西了
+			lock.lock();
 			try {
-				lock.lock();
 				if (!init) {
 					new Thread(new Runnable() {
 						public void run() {

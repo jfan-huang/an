@@ -14,8 +14,8 @@ import org.apache.http.util.Args;
 import org.jfan.an.slide.impl.abs.AbstractSlide;
 
 /**
- * <br>
- * <br>
+ * 通过线程池实现的‘滑梯’，<b>只适合单机</b><br>
+ * 可以指定同时执行的数量<br>
  * 
  * @author JFan - 2014年11月26日 下午4:37:22
  */
@@ -23,8 +23,8 @@ public class ExecutorPoolSlide extends AbstractSlide {
 
 	private static Lock lock = new ReentrantLock();
 
-	private int threadNum;
 	private ExecutorService executor;
+	protected int threadNum;
 
 	/**
 	 * {@inheritDoc} <br>
@@ -47,9 +47,9 @@ public class ExecutorPoolSlide extends AbstractSlide {
 	// ## private func
 
 	private ExecutorService executor() {
-		if (null == executor)
+		if (null == executor) {
+			lock.lock();
 			try {
-				lock.lock();
 				if (null == executor) {
 					Args.check(1 > threadNum, "'threadNum' minimum should be 1.");
 					executor = Executors.newFixedThreadPool(threadNum);
@@ -57,6 +57,7 @@ public class ExecutorPoolSlide extends AbstractSlide {
 			} finally {
 				lock.unlock();
 			}
+		}
 
 		return executor;
 	}
