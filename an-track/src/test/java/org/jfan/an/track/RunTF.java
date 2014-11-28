@@ -2,26 +2,24 @@ package org.jfan.an.track;
 
 import java.util.Date;
 
-import org.jfan.an.track.TrackFunc;
 import org.jfan.weapon.probability.random.RandomUtil;
 
-public class RunTF implements TrackFunc {
+public class RunTF implements Track {
 
 	public static int MAX_S = 10;
 
-	private String str;
+	private String name;
 	private int s;
 
-	public RunTF() {
+	public RunTF(String name) {
+		this.name = name;
+
 		s = RandomUtil.nextInt(-10, MAX_S);
-		str = new Date() + "\t" + s;
-		System.out.println(s);
+		System.out.println("执行时间（x秒后）：" + s + "\t" + name);
 	}
 
-	/*
-	 * （非 Javadoc）
-	 * 
-	 * @see org.an.track.TrackFunc#timeMillis()
+	/**
+	 * {@inheritDoc} <br>
 	 */
 	@Override
 	public long timeMillis() {
@@ -30,37 +28,31 @@ public class RunTF implements TrackFunc {
 		return nn;
 	}
 
-	/*
-	 * （非 Javadoc）
-	 * 
-	 * @see org.an.track.TrackFunc#pasc()
+	/**
+	 * {@inheritDoc} <br>
 	 */
 	@Override
 	public boolean pasc() {
 		return true;
 	}
 
-	/*
-	 * （非 Javadoc）
-	 * 
-	 * @see org.an.track.TrackFunc#onRun()
+	/**
+	 * {@inheritDoc} <br>
 	 */
 	@Override
 	public void onRun() {
-		System.out.println("RUN: " + str + " - runFunc - " + new Date());
+		System.out.println(name + " 执行了：" + new Date());
 
 		if (1 == RandomUtil.nextInt(5))
 			throw new RuntimeException("XXX 模拟发生错误 XXX");
 	}
 
-	/*
-	 * （非 Javadoc）
-	 * 
-	 * @see org.an.track.TrackFunc#onError(java.lang.Throwable)
+	/**
+	 * {@inheritDoc} <br>
 	 */
 	@Override
-	public void onError(Throwable t) {
-		System.out.println("RUN: " + str + " - onErroe - " + new Date() + " - " + t.getMessage());
+	public void onError(Exception e) {
+		System.out.println(name + " 发生错误: " + new Date() + " - " + e.getMessage());
 	}
 
 }

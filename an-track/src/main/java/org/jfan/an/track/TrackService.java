@@ -1,5 +1,11 @@
 package org.jfan.an.track;
 
+/**
+ * 定时任务Service <br>
+ * <br>
+ * 
+ * @author JFan 2014年11月28日 下午3:02:29
+ */
 public interface TrackService {
 
 	/**

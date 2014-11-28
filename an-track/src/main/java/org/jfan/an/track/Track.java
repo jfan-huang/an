@@ -4,7 +4,7 @@
 package org.jfan.an.track;
 
 /**
- * <br>
+ * 任务描述 <br>
  * <br>
  * 
  * @author JFan - 2014年10月30日 下午3:50:01
@@ -12,7 +12,7 @@ package org.jfan.an.track;
 public interface Track {
 
 	/**
-	 * 未来运行的一个时间值（毫秒）
+	 * 未来运行的一个时间值（毫秒），指示什么时候执行
 	 */
 	public long timeMillis();
 
@@ -29,6 +29,6 @@ public interface Track {
 	/**
 	 * 任务主体--发生异常时
 	 */
-	public void onError(Throwable t);
+	public void onError(Exception e);
 
 }

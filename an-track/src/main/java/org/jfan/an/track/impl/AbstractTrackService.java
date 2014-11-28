@@ -5,7 +5,6 @@ package org.jfan.an.track.impl;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import org.jfan.an.log.Logger;
 import org.jfan.an.log.LoggerFactory;
@@ -13,33 +12,29 @@ import org.jfan.an.track.Track;
 import org.jfan.an.track.TrackService;
 
 /**
- * <br>
- * <br>
+ * 任务服务抽象类 <br>
+ * 包装一下检测：是否过时抛弃、是否立即执行等<br>
  * 
  * @author JFan - 2014年10月30日 下午4:01:14
  */
 public abstract class AbstractTrackService implements TrackService {
 
+	// 各回各家，各找各妈。
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private ExecutorService executorService;
 	private int maximumPoolSize = 5;
 
-	/*
-	 * （非 Javadoc）
-	 * 
-	 * @see org.an.track.TrackFuncService#placeTrack(org.an.track.TrackFunc)
+	/**
+	 * {@inheritDoc} <br>
 	 */
 	@Override
 	public void placeTrack(Track track) {
 		placeTrack(track, track.pasc());
 	}
 
-	/*
-	 * （非 Javadoc）
-	 * 
-	 * @see org.an.track.TrackFuncService#placeTrack(org.an.track.TrackFunc,
-	 * boolean)
+	/**
+	 * {@inheritDoc} <br>
 	 */
 	@Override
 	public void placeTrack(Track track, boolean pasc) {
@@ -64,8 +59,7 @@ public abstract class AbstractTrackService implements TrackService {
 	 */
 	protected void executor(Track track) {
 		logger.info("Submit TaskRun '{}'.", track.getClass());
-		Future<?> submit = executorService().submit(runnable(track));
-		logger.debug("Future<?> submit = {}. ---->>>> Future ?????", submit);// TODO
+		executorService().submit(runnable(track));// Void
 	}
 
 	/**
@@ -91,6 +85,9 @@ public abstract class AbstractTrackService implements TrackService {
 		};
 	}
 
+	/**
+	 * 指定线程池 | 使用固定大小的线程池（默认5，可设定）
+	 */
 	private ExecutorService executorService() {
 		if (null == executorService) {
 			logger.info("The ExecutorService Not Init, use default {}.", maximumPoolSize);

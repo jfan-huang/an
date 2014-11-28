@@ -11,7 +11,7 @@ import org.jfan.an.track.Track;
 import org.jfan.an.track.impl.AbstractTrackService;
 
 /**
- * <br>
+ * 使用Timer实现的任务服务 <br>
  * <br>
  * 
  * @author JFan - 2014年11月5日 上午10:12:11
@@ -20,11 +20,8 @@ public class TimerTrackServiceImpl extends AbstractTrackService {
 
 	private Timer timer = new Timer(true);
 
-	/*
-	 * （非 Javadoc）
-	 * 
-	 * @see org.an.track.AbstractTrackFuncService#delay(org.an.track.TrackFunc,
-	 * long)
+	/**
+	 * {@inheritDoc} <br>
 	 */
 	@Override
 	protected void delay(final Track track, long milli) {

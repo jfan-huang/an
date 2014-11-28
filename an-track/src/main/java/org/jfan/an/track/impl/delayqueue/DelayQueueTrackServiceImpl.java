@@ -9,19 +9,16 @@ import org.jfan.an.track.Track;
 import org.jfan.an.track.impl.AbstractTrackService;
 
 /**
- * <br>
+ * 使用延迟队列，实现的任务服务 <br>
  * <br>
  * 
  * @author JFan - 2014年10月30日 下午4:00:05
  */
 public class DelayQueueTrackServiceImpl extends AbstractTrackService {
 
-	private DelayQueue<TraceDelayed> queue;
+	private DelayQueue<TraceDelayed> queue = new DelayQueue<TraceDelayed>();
 
 	public DelayQueueTrackServiceImpl() {
-		queue = new DelayQueue<TraceDelayed>();
-
-		// Thread thread = new Thread(new R());
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -38,12 +35,8 @@ public class DelayQueueTrackServiceImpl extends AbstractTrackService {
 		thread.start();
 	}
 
-	/*
-	 * （非 Javadoc）
-	 * 
-	 * @see
-	 * org.an.track.abs.AbstractTrackFuncService#delay(org.an.track.TrackFunc,
-	 * long)
+	/**
+	 * {@inheritDoc} <br>
 	 */
 	@Override
 	protected void delay(Track track, long milli) {

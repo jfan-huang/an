@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 import org.jfan.an.track.Track;
 
 /**
- * <br>
+ * 延迟队列 封装对象 <br>
  * <br>
  * 
  * @author JFan - 2014年10月30日 下午4:04:25

@@ -4,7 +4,7 @@
 package org.jfan.an.track.timer;
 
 import org.jfan.an.track.RunTF;
-import org.jfan.an.track.timer.TimerTrackFuncServiceImpl;
+import org.jfan.an.track.impl.timer.TimerTrackServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,21 +14,21 @@ import org.junit.Test;
  * 
  * @author JFan - 2014年11月5日 上午11:18:26
  */
-public class TimerTrackFuncServiceImplTest {
+public class TimerTrackServiceImplTest {
 
-	private TimerTrackFuncServiceImpl service;
+	private TimerTrackServiceImpl service;
 
-	/**
-	 * @throws java.lang.Exception
-	 */
 	@Before
 	public void setUp() throws Exception {
-		service = new TimerTrackFuncServiceImpl();
+		service = new TimerTrackServiceImpl();
 	}
 
 	@Test
 	public void placeTrack() {
-		service.placeTrack(new RunTF());
+		service.placeTrack(new RunTF("Timer_1"));
+		service.placeTrack(new RunTF("Timer_2"));
+		service.placeTrack(new RunTF("Timer_3"));
+		service.placeTrack(new RunTF("Timer_4"));
 
 		try {
 			for (int i = 1; i <= RunTF.MAX_S + 1; i++) {
