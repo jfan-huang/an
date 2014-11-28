@@ -9,7 +9,7 @@ package org.jfan.an.track;
  * 
  * @author JFan - 2014年10月30日 下午3:50:01
  */
-public interface TrackFunc {
+public interface Track {
 
 	/**
 	 * 未来运行的一个时间值（毫秒）

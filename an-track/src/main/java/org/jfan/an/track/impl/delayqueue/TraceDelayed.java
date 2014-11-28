@@ -1,12 +1,12 @@
 /**
  * 
  */
-package org.jfan.an.track.delayqueue;
+package org.jfan.an.track.impl.delayqueue;
 
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
 
-import org.jfan.an.track.TrackFunc;
+import org.jfan.an.track.Track;
 
 /**
  * <br>
@@ -16,10 +16,10 @@ import org.jfan.an.track.TrackFunc;
  */
 public class TraceDelayed implements Delayed {
 
-	private TrackFunc track;
+	private Track track;
 	private long milli;
 
-	public TraceDelayed(TrackFunc track, long milli) {
+	public TraceDelayed(Track track, long milli) {
 		this.track = track;
 		this.milli = milli;
 	}
@@ -48,7 +48,7 @@ public class TraceDelayed implements Delayed {
 	/**
 	 * @return track
 	 */
-	public TrackFunc getTrack() {
+	public Track getTrack() {
 		return track;
 	}
 

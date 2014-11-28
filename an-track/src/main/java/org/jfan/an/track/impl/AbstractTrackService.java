@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.jfan.an.track;
+package org.jfan.an.track.impl;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -9,6 +9,8 @@ import java.util.concurrent.Future;
 
 import org.jfan.an.log.Logger;
 import org.jfan.an.log.LoggerFactory;
+import org.jfan.an.track.Track;
+import org.jfan.an.track.TrackService;
 
 /**
  * <br>
@@ -16,7 +18,7 @@ import org.jfan.an.log.LoggerFactory;
  * 
  * @author JFan - 2014年10月30日 下午4:01:14
  */
-public abstract class AbstractTrackFuncService implements TrackFuncService {
+public abstract class AbstractTrackService implements TrackService {
 
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -29,7 +31,7 @@ public abstract class AbstractTrackFuncService implements TrackFuncService {
 	 * @see org.an.track.TrackFuncService#placeTrack(org.an.track.TrackFunc)
 	 */
 	@Override
-	public void placeTrack(TrackFunc track) {
+	public void placeTrack(Track track) {
 		placeTrack(track, track.pasc());
 	}
 
@@ -40,7 +42,7 @@ public abstract class AbstractTrackFuncService implements TrackFuncService {
 	 * boolean)
 	 */
 	@Override
-	public void placeTrack(TrackFunc track, boolean pasc) {
+	public void placeTrack(Track track, boolean pasc) {
 		long milli = track.timeMillis();
 		if (milli <= System.currentTimeMillis()) {
 			if (pasc)
@@ -55,12 +57,12 @@ public abstract class AbstractTrackFuncService implements TrackFuncService {
 	/**
 	 * 通知实现方式：时间还没到
 	 */
-	protected abstract void delay(TrackFunc track, long milli);
+	protected abstract void delay(Track track, long milli);
 
 	/**
 	 * 提供给实现方式：执行任务
 	 */
-	protected void executor(TrackFunc track) {
+	protected void executor(Track track) {
 		logger.info("Submit TaskRun '{}'.", track.getClass());
 		Future<?> submit = executorService().submit(runnable(track));
 		logger.debug("Future<?> submit = {}. ---->>>> Future ?????", submit);// TODO
@@ -69,7 +71,7 @@ public abstract class AbstractTrackFuncService implements TrackFuncService {
 	/**
 	 * 如果需要使用Runnable，请使用此方法统一返回
 	 */
-	protected Runnable runnable(final TrackFunc track) {
+	protected Runnable runnable(final Track track) {
 		return new Runnable() {
 			/*
 			 * （非 Javadoc）

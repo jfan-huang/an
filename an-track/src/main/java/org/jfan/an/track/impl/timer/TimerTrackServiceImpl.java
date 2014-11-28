@@ -1,14 +1,14 @@
 /**
  * 
  */
-package org.jfan.an.track.timer;
+package org.jfan.an.track.impl.timer;
 
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.jfan.an.track.AbstractTrackFuncService;
-import org.jfan.an.track.TrackFunc;
+import org.jfan.an.track.Track;
+import org.jfan.an.track.impl.AbstractTrackService;
 
 /**
  * <br>
@@ -16,7 +16,7 @@ import org.jfan.an.track.TrackFunc;
  * 
  * @author JFan - 2014年11月5日 上午10:12:11
  */
-public class TimerTrackFuncServiceImpl extends AbstractTrackFuncService {
+public class TimerTrackServiceImpl extends AbstractTrackService {
 
 	private Timer timer = new Timer(true);
 
@@ -27,7 +27,7 @@ public class TimerTrackFuncServiceImpl extends AbstractTrackFuncService {
 	 * long)
 	 */
 	@Override
-	protected void delay(final TrackFunc track, long milli) {
+	protected void delay(final Track track, long milli) {
 		timer.schedule(new TimerTask() {
 
 			/*

@@ -1,12 +1,12 @@
 /**
  * 
  */
-package org.jfan.an.track.delayqueue;
+package org.jfan.an.track.impl.delayqueue;
 
 import java.util.concurrent.DelayQueue;
 
-import org.jfan.an.track.AbstractTrackFuncService;
-import org.jfan.an.track.TrackFunc;
+import org.jfan.an.track.Track;
+import org.jfan.an.track.impl.AbstractTrackService;
 
 /**
  * <br>
@@ -14,11 +14,11 @@ import org.jfan.an.track.TrackFunc;
  * 
  * @author JFan - 2014年10月30日 下午4:00:05
  */
-public class DelayQueueTrackFuncServiceImpl extends AbstractTrackFuncService {
+public class DelayQueueTrackServiceImpl extends AbstractTrackService {
 
 	private DelayQueue<TraceDelayed> queue;
 
-	public DelayQueueTrackFuncServiceImpl() {
+	public DelayQueueTrackServiceImpl() {
 		queue = new DelayQueue<TraceDelayed>();
 
 		// Thread thread = new Thread(new R());
@@ -46,7 +46,7 @@ public class DelayQueueTrackFuncServiceImpl extends AbstractTrackFuncService {
 	 * long)
 	 */
 	@Override
-	protected void delay(TrackFunc track, long milli) {
+	protected void delay(Track track, long milli) {
 		queue.offer(new TraceDelayed(track, milli));
 	}
 
