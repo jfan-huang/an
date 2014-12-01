@@ -6,7 +6,7 @@ package org.jfan.an.track.impl.delayqueue;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
 
-import org.jfan.an.track.Track;
+import org.jfan.an.track.impl.TrackNode;
 
 /**
  * 延迟队列 封装对象 <br>
@@ -16,11 +16,11 @@ import org.jfan.an.track.Track;
  */
 public class TraceDelayed implements Delayed {
 
-	private Track track;
+	private TrackNode trackNode;
 	private long milli;
 
-	public TraceDelayed(Track track, long milli) {
-		this.track = track;
+	public TraceDelayed(TrackNode trackNode, long milli) {
+		this.trackNode = trackNode;
 		this.milli = milli;
 	}
 
@@ -45,11 +45,14 @@ public class TraceDelayed implements Delayed {
 		return TimeUnit.MILLISECONDS.convert(milli, unit);
 	}
 
+	// ####
+	// ## set func
+
 	/**
 	 * @return track
 	 */
-	public Track getTrack() {
-		return track;
+	public TrackNode getTrackNode() {
+		return trackNode;
 	}
 
 }

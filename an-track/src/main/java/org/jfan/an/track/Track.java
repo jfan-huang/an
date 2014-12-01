@@ -12,7 +12,7 @@ package org.jfan.an.track;
 public interface Track {
 
 	/**
-	 * 未来运行的一个时间值（毫秒），指示什么时候执行
+	 * 未来运行的一个时间值（毫秒），指示什么时候执行（是一个具体的时间）
 	 */
 	public long timeMillis();
 

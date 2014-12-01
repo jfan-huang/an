@@ -6,9 +6,11 @@ package org.jfan.an.track.impl;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.apache.http.util.Args;
 import org.jfan.an.log.Logger;
 import org.jfan.an.log.LoggerFactory;
 import org.jfan.an.track.Track;
+import org.jfan.an.track.TrackLoop;
 import org.jfan.an.track.TrackService;
 
 /**
@@ -38,34 +40,59 @@ public abstract class AbstractTrackService implements TrackService {
 	 */
 	@Override
 	public void placeTrack(Track track, boolean pasc) {
+		boolean loop = TrackLoop.class.isAssignableFrom(track.getClass());
+		Args.check(loop && 0 >= ((TrackLoop) track).intervalMillis(), "The time interval is not correct.");
+
+		// init TrackNode
+		TrackNode trackNode = new TrackNode();
+		trackNode.setTrack(track);
+		if (loop) {
+			trackNode.setLoop(loop);
+			TrackLoop tl = (TrackLoop) track;
+			trackNode.setIntervalMillis(tl.intervalMillis());
+			trackNode.setWithFixedDelay(tl.withFixedDelay());
+		}
+
+		// check run
 		long milli = track.timeMillis();
-		if (milli <= System.currentTimeMillis()) {
+		long time = System.currentTimeMillis();
+		if (milli <= time) {
 			if (pasc)
-				executor(track);
-			else
+				executor(trackNode);
+			else {
 				logger.warn("Task '{}' has been past, is no longer running.", track.getClass());
+
+				// loop - next run
+				if (trackNode.isLoop())
+					delay(trackNode, time + trackNode.getIntervalMillis());
+			}
 		} else {
-			delay(track, milli);
+			delay(trackNode, milli);
 		}
 	}
 
 	/**
-	 * 通知实现方式：时间还没到
+	 * 通知实现方式：交给具体的实现
 	 */
-	protected abstract void delay(Track track, long milli);
+	protected abstract void delay(TrackNode trackNode, long milli);
 
 	/**
 	 * 提供给实现方式：执行任务
+	 * 
+	 * 如果子类执行任务时，不是使用此方法提交任务，那么请自行实现Loop功能
 	 */
-	protected void executor(Track track) {
-		logger.info("Submit TaskRun '{}'.", track.getClass());
-		executorService().submit(runnable(track));// Void
+	protected void executor(TrackNode trackNode) {
+		logger.info("Submit TaskRun '{}'.", trackNode.getTrack().getClass());
+		executorService().submit(runnable(trackNode));// Future<Void>
+
+		// loop - withFixed submit
+		loop(trackNode);
 	}
 
 	/**
 	 * 如果需要使用Runnable，请使用此方法统一返回
 	 */
-	protected Runnable runnable(final Track track) {
+	protected Runnable runnable(final TrackNode trackNode) {
 		return new Runnable() {
 			/*
 			 * （非 Javadoc）
@@ -74,15 +101,27 @@ public abstract class AbstractTrackService implements TrackService {
 			 */
 			@Override
 			public void run() {
+				Track track = trackNode.getTrack();
 				try {
-					logger.info("TaskRun '{}'.", track.getClass());
+					if (logger.isDebugEnabled())
+						logger.debug("TaskRun '{}'.", track.getClass());
 					track.onRun();
 				} catch (Exception e) {
 					logger.error("TaskRun '{}' ERROR: {}.", track.getClass(), e.getMessage());
 					track.onError(e);
 				}
+
+				// loop - withFixed End
+				loop(trackNode);
 			}
 		};
+	}
+
+	private void loop(TrackNode trackNode) {
+		if (trackNode.isLoop()) {
+			long milli = System.currentTimeMillis() + trackNode.getIntervalMillis();
+			delay(trackNode, milli);
+		}
 	}
 
 	/**

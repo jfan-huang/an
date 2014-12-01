@@ -7,8 +7,8 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.jfan.an.track.Track;
 import org.jfan.an.track.impl.AbstractTrackService;
+import org.jfan.an.track.impl.TrackNode;
 
 /**
  * 使用Timer实现的任务服务 <br>
@@ -24,7 +24,7 @@ public class TimerTrackServiceImpl extends AbstractTrackService {
 	 * {@inheritDoc} <br>
 	 */
 	@Override
-	protected void delay(final Track track, long milli) {
+	protected void delay(final TrackNode trackNode, final long milli) {
 		timer.schedule(new TimerTask() {
 
 			/*
@@ -34,7 +34,7 @@ public class TimerTrackServiceImpl extends AbstractTrackService {
 			 */
 			@Override
 			public void run() {
-				executor(track);
+				executor(trackNode);
 			}
 
 		}, new Date(milli));

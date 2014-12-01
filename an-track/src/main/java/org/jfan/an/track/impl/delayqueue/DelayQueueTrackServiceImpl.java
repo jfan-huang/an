@@ -5,8 +5,8 @@ package org.jfan.an.track.impl.delayqueue;
 
 import java.util.concurrent.DelayQueue;
 
-import org.jfan.an.track.Track;
 import org.jfan.an.track.impl.AbstractTrackService;
+import org.jfan.an.track.impl.TrackNode;
 
 /**
  * 使用延迟队列，实现的任务服务 <br>
@@ -25,7 +25,7 @@ public class DelayQueueTrackServiceImpl extends AbstractTrackService {
 				for (;;) {
 					TraceDelayed track = queue.poll();
 					if (null != track)
-						executor(track.getTrack());
+						executor(track.getTrackNode());
 					// else
 					// System.out.println("***********");
 				}
@@ -39,8 +39,8 @@ public class DelayQueueTrackServiceImpl extends AbstractTrackService {
 	 * {@inheritDoc} <br>
 	 */
 	@Override
-	protected void delay(Track track, long milli) {
-		queue.offer(new TraceDelayed(track, milli));
+	protected void delay(TrackNode trackNode, long milli) {
+		queue.offer(new TraceDelayed(trackNode, milli));
 	}
 
 }
