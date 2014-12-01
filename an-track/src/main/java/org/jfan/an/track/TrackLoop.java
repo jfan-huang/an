@@ -19,9 +19,10 @@ public interface TrackLoop extends Track {
 	public long intervalMillis();
 
 	/**
-	 * 返回一个bool，指示相对延迟，还是绝对延迟
-	 * 
-	 * 相对于上一次任务完成时间，绝对于上次任务发起之后
+	 * 返回一个bool，指示相对延迟，还是绝对延迟<br>
+	 * <br>
+	 * true：绝对于上次任务发起之后<br>
+	 * false：相对于上一次任务完成时间<br>
 	 */
 	public boolean withFixedDelay();
 
