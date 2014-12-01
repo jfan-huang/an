@@ -9,8 +9,8 @@ import org.jfan.an.cache.level2.ExpLimit;
 import org.jfan.an.cache.level2.LocalNotFoundNotice;
 import org.jfan.an.cache.level2.impl.Level2CacheServiceImpl;
 import org.jfan.an.surfing.abs.LoadStrategy;
-import org.jfan.an.surfing.abs.strategy.OnlyAmassFlag;
-import org.jfan.an.surfing.abs.strategy.OnlyExecutionPoolGroup;
+import org.jfan.an.surfing.abs.strategy.OnlyFutureLoad;
+import org.jfan.an.surfing.abs.strategy.OnlyFutureLoadGroup;
 import org.jfan.an.surfing.impl.CacheSurfing;
 import org.jfan.an.surfing.impl.MemoryFixedSurfing;
 
@@ -23,14 +23,19 @@ import org.jfan.an.surfing.impl.MemoryFixedSurfing;
  */
 public final class SurfingFactory {
 
+	private SurfingFactory() {
+	}
+
 	/**
 	 * 存储在 T对象数组中，数组大小不可变
 	 * 
 	 * 适合永不变的对象
 	 */
-	public static final <T> Surfing<T> newMemoryFixedSize(SurfingSourceAll<T> source, Class<T> clzss, int size) {
+	public static final <T> Surfing<T> newMemoryFixedSize(SurfingSource<T> source, Class<T> clzss, int size) {
 		MemoryFixedSurfing<T> memoryFixedSurfing = new MemoryFixedSurfing<T>(clzss, size);
 		memoryFixedSurfing.setSource(source);
+
+		memoryFixedSurfing.initial();
 		return memoryFixedSurfing;
 	}
 
@@ -45,29 +50,27 @@ public final class SurfingFactory {
 	 * 存储在 缓存组件中，固定的超时时间，失效时只有一个回源（相同的key）（本地）
 	 */
 	public static final <T> Surfing<T> newCachedLoadOnly(SurfingSource<T> source, BaseCacheService cacheService, int expSeconds) {
-		return sacheSurfing(source, cacheService, expSeconds, new OnlyExecutionPoolGroup<T>());
+		return sacheSurfing(source, cacheService, expSeconds, new OnlyFutureLoad<T>());
 	}
 
 	/**
 	 * 存储在 缓存组件中，固定的超时时间，时效时只有一个回源（相同的key）（集群）
 	 */
-	public static final <T> Surfing<T> newCachedLoadFlag(SurfingSource<T> source, AddCacheService cacheService, int expSeconds) {
-		OnlyAmassFlag<T> ls = new OnlyAmassFlag<T>();
-		ls.setCacheService(cacheService);
-		return sacheSurfing(source, cacheService, expSeconds, ls);
+	public static final <T> Surfing<T> newCachedLoadOnlyGroup(SurfingSource<T> source, AddCacheService cacheService, int expSeconds) {
+		OnlyFutureLoadGroup<T> onlyLoad = new OnlyFutureLoadGroup<T>();
+		onlyLoad.setCacheService(cacheService);
+		return sacheSurfing(source, cacheService, expSeconds, onlyLoad);
 	}
 
 	/**
-	 * 存储在两层缓存中，固定的超时时间（远端），本地超时时间依赖于def（
-	 * {@link org.an.cache.level2.DefExpLimit}）
+	 * 存储在两层缓存中，固定的超时时间（远端），本地超时时间依赖于def（ {@link org.an.cache.level2.DefExpLimit}）
 	 */
 	public static final <T> Surfing<T> newLevel2Cached(SurfingSource<T> source, BaseCacheService localCache, BaseCacheService amassCache, int amassExpSeconds) {
 		return newLevel2Cached(source, localCache, amassCache, amassExpSeconds, null, null);
 	}
 
 	/**
-	 * 存储在两层缓存中，固定的超时时间（远端），本地超时时间由expLimit计算，并且具备条件通知能力（
-	 * {@link org.jfan.an.cache.level2.LocalNotFoundNotice}）
+	 * 存储在两层缓存中，固定的超时时间（远端），本地超时时间由expLimit计算，并且具备条件通知能力（ {@link org.jfan.an.cache.level2.LocalNotFoundNotice}）
 	 */
 	public static final <T> Surfing<T> newLevel2Cached(SurfingSource<T> source, BaseCacheService localCache, BaseCacheService amassCache, int amassExpSeconds//
 			, ExpLimit expLimit, LocalNotFoundNotice notice) {
@@ -76,16 +79,14 @@ public final class SurfingFactory {
 	}
 
 	/**
-	 * 存储在两层缓存中，固定的超时时间（远端），本地超时时间依赖于def（{@link org.an.cache.level2.DefExpLimit}
-	 * ），失效时只有一个回源（相同的key）（本地）
+	 * 存储在两层缓存中，固定的超时时间（远端），本地超时时间依赖于def（{@link org.an.cache.level2.DefExpLimit} ），失效时只有一个回源（相同的key）（本地）
 	 */
 	public static final <T> Surfing<T> newLevel2CachedLoadOnly(SurfingSource<T> source, BaseCacheService localCache, BaseCacheService amassCache, int amassExpSeconds) {
 		return newLevel2CachedLoadOnly(source, localCache, amassCache, amassExpSeconds, null, null);
 	}
 
 	/**
-	 * 存储在两层缓存中，固定的超时时间（远端），本地超时时间由expLimit计算，并且具备条件通知能力（
-	 * {@link org.jfan.an.cache.level2.LocalNotFoundNotice}），失效时只有一个回源（相同的key）（本地）
+	 * 存储在两层缓存中，固定的超时时间（远端），本地超时时间由expLimit计算，并且具备条件通知能力（ {@link org.jfan.an.cache.level2.LocalNotFoundNotice}），失效时只有一个回源（相同的key）（本地）
 	 */
 	public static final <T> Surfing<T> newLevel2CachedLoadOnly(SurfingSource<T> source, BaseCacheService localCache, BaseCacheService amassCache, int amassExpSeconds//
 			, ExpLimit expLimit, LocalNotFoundNotice notice) {
@@ -94,24 +95,21 @@ public final class SurfingFactory {
 	}
 
 	/**
-	 * 存储在两层缓存中，固定的超时时间（远端），本地超时时间依赖于def（{@link org.an.cache.level2.DefExpLimit}
-	 * ），失效时只有一个回源（相同的key）（集群）
+	 * 存储在两层缓存中，固定的超时时间（远端），本地超时时间依赖于def（{@link org.an.cache.level2.DefExpLimit} ），失效时只有一个回源（相同的key）（集群）
 	 */
-	public static final <T> Surfing<T> newLevel2CachedLoadFlag(SurfingSource<T> source, BaseCacheService localCache, AddCacheService amassCache, int amassExpSeconds) {
-		return newLevel2CachedLoadFlag(source, localCache, amassCache, amassExpSeconds, null, null);
+	public static final <T> Surfing<T> newLevel2CachedLoadOnlyGroup(SurfingSource<T> source, BaseCacheService localCache, AddCacheService amassCache, int amassExpSeconds) {
+		return newLevel2CachedLoadOnlyGroup(source, localCache, amassCache, amassExpSeconds, null, null);
 	}
 
 	/**
-	 * 存储在两层缓存中，固定的超时时间（远端），本地超时时间由expLimit计算，并且具备条件通知能力（
-	 * {@link org.jfan.an.cache.level2.LocalNotFoundNotice}），失效时只有一个回源（相同的key）（集群）
+	 * 存储在两层缓存中，固定的超时时间（远端），本地超时时间由expLimit计算，并且具备条件通知能力（ {@link org.jfan.an.cache.level2.LocalNotFoundNotice}），失效时只有一个回源（相同的key）（集群）
 	 */
-	public static final <T> Surfing<T> newLevel2CachedLoadFlag(SurfingSource<T> source, BaseCacheService localCache, AddCacheService amassCache, int amassExpSeconds//
+	public static final <T> Surfing<T> newLevel2CachedLoadOnlyGroup(SurfingSource<T> source, BaseCacheService localCache, AddCacheService amassCache, int amassExpSeconds//
 			, ExpLimit expLimit, LocalNotFoundNotice notice) {
 		Level2CacheServiceImpl level2Cache = level2Cache(localCache, amassCache, expLimit, notice);
-		// return newCachedLoadFlag(source, level2Cache, amassExpTime);
-		OnlyAmassFlag<T> ls = new OnlyAmassFlag<T>();
-		ls.setCacheService(amassCache);
-		return sacheSurfing(source, level2Cache, amassExpSeconds, ls);
+		OnlyFutureLoadGroup<T> onlyLoad = new OnlyFutureLoadGroup<T>();
+		onlyLoad.setCacheService(amassCache);
+		return sacheSurfing(source, level2Cache, amassExpSeconds, onlyLoad);
 	}
 
 	// ####
@@ -133,6 +131,8 @@ public final class SurfingFactory {
 
 		cacheSurfing.setExpSeconds(expSeconds);
 		cacheSurfing.setStrategy(strategy);
+
+		cacheSurfing.initial();
 		return cacheSurfing;
 	}
 

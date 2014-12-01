@@ -14,8 +14,13 @@ import org.jfan.an.surfing.SurfingSource;
 public interface LoadStrategy<T> {
 
 	/**
-	 * load Processing
+	 * 处理回源事宜
 	 */
 	public T load(SurfingSource<T> source, String key, Object... args);
+
+	/**
+	 * 在回源拿到数据之后，贮存好了对象之后，调用此方法。释放一些 load 中占用的资源
+	 */
+	public void loadAfter(String key);
 
 }

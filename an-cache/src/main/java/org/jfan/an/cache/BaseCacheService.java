@@ -9,8 +9,10 @@ package org.jfan.an.cache;
 public interface BaseCacheService {
 
 	// 秒
-	public static final int EXP_3_S  = 3;
-	public static final int EXP_5_S  = 5;
+	public static final int EXP_1_S  = 1;
+	public static final int EXP_2_S  = EXP_1_S * 2;
+	public static final int EXP_3_S  = EXP_1_S * 3;
+	public static final int EXP_5_S  = EXP_1_S * 5;
 	public static final int EXP_15_S = EXP_5_S * 3;
 	public static final int EXP_30_S = EXP_5_S * 6;
 	public static final int EXP_45_S = EXP_5_S * 9;

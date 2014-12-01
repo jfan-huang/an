@@ -19,5 +19,11 @@
 			<artifactId>an-cache</artifactId>
 			<version>${version}</version>
 		</dependency>
+
+		<dependency>
+			<groupId>${groupId}</groupId>
+			<artifactId>an-track</artifactId>
+			<version>${version}</version>
+		</dependency>
 	</dependencies>
 </project>
