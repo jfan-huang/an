@@ -32,9 +32,11 @@ public class OnlyFutureLoadGroup<T> extends OnlyFutureLoad<T> {
 			public T call() throws Exception {
 				String keyFlag = key + suffix;
 
+				// 回源拿数据
 				if (cacheService.add(keyFlag, 1, exp)) {
-					System.out.println("回源：" + key);
 					return source.toSource(args);
+
+					// 等着取别人拿到的数据
 				} else {
 					for (;;) {
 						// 用判断flag是否存在，也不是万全的做法，考虑使用 消息通知
@@ -42,7 +44,7 @@ public class OnlyFutureLoadGroup<T> extends OnlyFutureLoad<T> {
 						if (!cacheService.isExist(keyFlag))
 							return (T) cacheService.get(key);
 
-						waitGo(100);
+						waitGo(100);// JProfiler分析，次方法稍微耗时，存在红色线程
 					}
 				}
 			}
