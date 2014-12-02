@@ -5,10 +5,10 @@ package org.jfan.an.cache;
 
 import java.util.concurrent.ExecutorService;
 
-import org.apache.http.util.Args;
 import org.jfan.an.cache.level2.ExpLimit;
 import org.jfan.an.cache.level2.LocalNotFoundNotice;
 import org.jfan.an.cache.level2.impl.Level2CacheServiceImpl;
+import org.jfan.an.utils.Args;
 
 /**
  * <br>
@@ -78,7 +78,7 @@ public final class Level2CacheFactory {
 		Args.notNull(localCache, "'localCache'");
 		Args.notNull(amassCache, "'amassCache'");
 		if (null != localCache && null != amassCache)
-			Args.check(localCache.getClass().equals(amassCache.getClass()), "'localCache' and 'amassCache' cannot be the same source");
+			Args.check(!(localCache.getClass().equals(amassCache.getClass())), "'localCache' and 'amassCache' cannot be the same source");
 
 		Level2CacheServiceImpl service = new Level2CacheServiceImpl();
 		service.setLocalCache(localCache);
