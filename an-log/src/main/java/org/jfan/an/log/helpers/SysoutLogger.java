@@ -17,7 +17,7 @@ import org.jfan.an.log.Logger;
 public class SysoutLogger implements Logger {
 
 	// Trace:0 ~~ error:4
-	public static Integer LEVEL = 0;
+	public static Integer LEVEL = 3;
 
 	private PrintStream out = System.out;
 	private PrintStream err = System.err;

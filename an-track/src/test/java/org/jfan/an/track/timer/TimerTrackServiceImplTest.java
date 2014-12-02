@@ -6,6 +6,7 @@ package org.jfan.an.track.timer;
 import org.jfan.an.track.RunTF;
 import org.jfan.an.track.impl.timer.TimerTrackServiceImpl;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -14,6 +15,8 @@ import org.junit.Test;
  * 
  * @author JFan - 2014年11月5日 上午11:18:26
  */
+//TODO
+@Ignore
 public class TimerTrackServiceImplTest {
 
 	private TimerTrackServiceImpl service;

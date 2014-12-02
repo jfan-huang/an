@@ -9,6 +9,7 @@ import java.util.List;
 import org.jfan.an.langyan.LangyanSignalListener;
 import org.jfan.an.langyan.redis.RedisLangyanSignalServiceImpl;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import redis.clients.jedis.Jedis;
@@ -25,6 +26,8 @@ import redis.clients.jedis.ShardedJedisPool;
  * 
  * @author JFan - 2014年11月5日 下午6:41:33
  */
+// TODO
+@Ignore
 public class RedisLangyanSignalServiceImplTest {
 
 	private RedisLangyanSignalServiceImpl service1;

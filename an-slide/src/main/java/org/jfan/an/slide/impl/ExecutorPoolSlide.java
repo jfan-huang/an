@@ -10,8 +10,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import org.apache.http.util.Args;
 import org.jfan.an.slide.impl.abs.AbstractSlide;
+import org.jfan.an.utils.Args;
 
 /**
  * 通过线程池实现的‘滑梯’，<b>只适合单机</b><br>
@@ -51,7 +51,7 @@ public class ExecutorPoolSlide extends AbstractSlide {
 			lock.lock();
 			try {
 				if (null == executor) {
-					Args.check(1 > threadNum, "'threadNum' minimum should be 1.");
+					Args.check(1 < threadNum, "'threadNum' minimum should be 1.");
 					executor = Executors.newFixedThreadPool(threadNum);
 				}
 			} finally {

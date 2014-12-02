@@ -6,9 +6,9 @@ package org.jfan.an.slide.impl;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.http.util.Args;
 import org.jfan.an.cache.AddCacheService;
 import org.jfan.an.slide.SlideCallback;
+import org.jfan.an.utils.Args;
 
 /**
  * 通过阻塞队列，实现‘滑梯’，<b>适合集群环境</b><br>
@@ -57,7 +57,7 @@ public class GroupQueueSlide extends QueueSlide {
 	 * @param intervalMilliseconds 要设置的 intervalMilliseconds
 	 */
 	public void setIntervalMilliseconds(long intervalMilliseconds) {
-		Args.check(0 >= intervalMilliseconds, "'intervalMilliseconds' should be a value greater than zero.");
+		Args.check(0 < intervalMilliseconds, "'intervalMilliseconds' should be a value greater than zero.");
 		this.intervalMilliseconds = intervalMilliseconds;
 	}
 

@@ -3,8 +3,11 @@ package org.jfan.an.track.delayqueue;
 import org.jfan.an.track.RunTF;
 import org.jfan.an.track.impl.delayqueue.DelayQueueTrackServiceImpl;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
+//TODO
+@Ignore
 public class DelayQueueTrackServiceImplTest {
 
 	private DelayQueueTrackServiceImpl service;

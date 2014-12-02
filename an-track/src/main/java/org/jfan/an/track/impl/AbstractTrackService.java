@@ -6,12 +6,12 @@ package org.jfan.an.track.impl;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.apache.http.util.Args;
 import org.jfan.an.log.Logger;
 import org.jfan.an.log.LoggerFactory;
 import org.jfan.an.track.Track;
 import org.jfan.an.track.TrackLoop;
 import org.jfan.an.track.TrackService;
+import org.jfan.an.utils.Args;
 
 /**
  * 任务服务抽象类 <br>
@@ -41,7 +41,8 @@ public abstract class AbstractTrackService implements TrackService {
 	@Override
 	public void placeTrack(Track track, boolean pasc) {
 		boolean loop = TrackLoop.class.isAssignableFrom(track.getClass());
-		Args.check(loop && 0 >= ((TrackLoop) track).intervalMillis(), "The time interval is not correct.");
+		if (loop)
+			Args.check(0 < ((TrackLoop) track).intervalMillis(), "The time interval is not correct.");
 
 		// init TrackNode
 		TrackNode trackNode = new TrackNode();
@@ -86,7 +87,8 @@ public abstract class AbstractTrackService implements TrackService {
 		executorService().submit(runnable(trackNode));// Future<Void>
 
 		// loop - withFixed submit
-		loop(trackNode);
+		if (trackNode.isWithFixedDelay())
+			loop(trackNode);
 	}
 
 	/**
@@ -112,7 +114,8 @@ public abstract class AbstractTrackService implements TrackService {
 				}
 
 				// loop - withFixed End
-				loop(trackNode);
+				if (!trackNode.isWithFixedDelay())
+					loop(trackNode);
 			}
 		};
 	}
