@@ -28,18 +28,21 @@ public class OnlyFutureLoadGroup<T> extends OnlyFutureLoad<T> {
 	@Override
 	protected Callable<T> callable(final SurfingSource<T> source, final String key, final Object... args) {
 		return new Callable<T>() {
+			@SuppressWarnings("unchecked")
 			public T call() throws Exception {
 				String keyFlag = key + suffix;
 
-				if (cacheService.add(keyFlag, 1, exp))
+				if (cacheService.add(keyFlag, 1, exp)) {
+					System.out.println("回源：" + key);
 					return source.toSource(args);
-				else {
+				} else {
 					for (;;) {
-						if (!cacheService.isExist(keyFlag)) {// 用判断flag是否存在，也不是万全的做法，考虑使用 消息通知
-							// TODO 已经有人回源了，这里取别人的结果
-							return null;
-						}
-						waitGo(200);
+						// 用判断flag是否存在，也不是万全的做法，考虑使用 消息通知
+						// 有可能在 exp 时间内，回源任然未完成
+						if (!cacheService.isExist(keyFlag))
+							return (T) cacheService.get(key);
+
+						waitGo(100);
 					}
 				}
 			}
