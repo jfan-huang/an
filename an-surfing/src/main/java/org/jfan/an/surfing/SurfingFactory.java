@@ -3,15 +3,18 @@
  */
 package org.jfan.an.surfing;
 
+import org.apache.http.util.Args;
 import org.jfan.an.cache.AddCacheService;
 import org.jfan.an.cache.BaseCacheService;
 import org.jfan.an.cache.level2.ExpLimit;
+import org.jfan.an.cache.level2.Level2CacheService;
 import org.jfan.an.cache.level2.LocalNotFoundNotice;
 import org.jfan.an.cache.level2.impl.Level2CacheServiceImpl;
 import org.jfan.an.surfing.abs.LoadStrategy;
 import org.jfan.an.surfing.abs.strategy.OnlyFutureLoad;
 import org.jfan.an.surfing.abs.strategy.OnlyFutureLoadGroup;
 import org.jfan.an.surfing.impl.CacheSurfing;
+import org.jfan.an.surfing.impl.CacheVersionSurfing;
 import org.jfan.an.surfing.impl.MemoryFixedSurfing;
 
 /**
@@ -112,6 +115,37 @@ public final class SurfingFactory {
 		return sacheSurfing(source, level2Cache, amassExpSeconds, onlyLoad);
 	}
 
+	/**
+	 * 存储在本地缓存中，依据集中缓存中对应的version值，判断是否需要回源
+	 */
+	public static final <T> Surfing<T> newLocalCacheVerLoad(SurfingSource<T> source, Level2CacheService cacheService, int expSeconds) {
+		return sacheSurfingVersion(source, cacheService, expSeconds, null);
+	}
+
+	/**
+	 * 存储在本地缓存中，依据集中缓存中对应的version值，判断是否需要回源
+	 * 
+	 * 具备防穿透策略（单机）
+	 */
+	public static final <T> Surfing<T> newLocalCacheVerLoadOnly(SurfingSource<T> source, Level2CacheService cacheService, int expSeconds) {
+		return sacheSurfingVersion(source, cacheService, expSeconds, new OnlyFutureLoad<T>());
+	}
+
+	/**
+	 * 存储在本地缓存中，依据集中缓存中对应的version值，判断是否需要回源
+	 * 
+	 * 具备防穿透策略（集群）
+	 */
+	public static final <T> Surfing<T> newLocalCacheVerLoadOnlyGroup(SurfingSource<T> source, Level2CacheService cacheService, int expSeconds) {
+		BaseCacheService amassCache = cacheService.getAmassCache();
+		Args.notNull(amassCache, "'CacheService.amassCache'");
+		Args.check(AddCacheService.class.isAssignableFrom(amassCache.getClass()), "Implementation of 'AmassCache' is not a '" + AddCacheService.class + "'.");
+
+		OnlyFutureLoadGroup<T> onlyLoad = new OnlyFutureLoadGroup<T>();
+		onlyLoad.setCacheService((AddCacheService) amassCache);
+		return sacheSurfingVersion(source, cacheService, expSeconds, onlyLoad);
+	}
+
 	// ####
 	// ## private func
 
@@ -126,6 +160,18 @@ public final class SurfingFactory {
 
 	private static final <T> CacheSurfing<T> sacheSurfing(SurfingSource<T> source, BaseCacheService cacheService, int expSeconds, LoadStrategy<T> strategy) {
 		CacheSurfing<T> cacheSurfing = new CacheSurfing<T>();
+		cacheSurfing.setSource(source);
+		cacheSurfing.setCacheService(cacheService);
+
+		cacheSurfing.setExpSeconds(expSeconds);
+		cacheSurfing.setStrategy(strategy);
+
+		cacheSurfing.initial();
+		return cacheSurfing;
+	}
+
+	private static final <T> CacheVersionSurfing<T> sacheSurfingVersion(SurfingSource<T> source, Level2CacheService cacheService, int expSeconds, LoadStrategy<T> strategy) {
+		CacheVersionSurfing<T> cacheSurfing = new CacheVersionSurfing<T>();
 		cacheSurfing.setSource(source);
 		cacheSurfing.setCacheService(cacheService);
 
