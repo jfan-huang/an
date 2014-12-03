@@ -27,6 +27,20 @@ public class Level2CacheServiceImpl implements Level2CacheService {
 	private LocalNotFoundNotice notice;
 	private ExecutorService executorService;
 
+	/**
+	 * {@inheritDoc} <br>
+	 */
+	public BaseCacheService getLocalCache() {
+		return localCache;
+	}
+
+	/**
+	 * {@inheritDoc} <br>
+	 */
+	public BaseCacheService getAmassCache() {
+		return amassCache;
+	}
+
 	// ####
 	// ##对本地缓存的操作
 
@@ -34,7 +48,15 @@ public class Level2CacheServiceImpl implements Level2CacheService {
 	 * {@inheritDoc} <br>
 	 */
 	@Override
-	public <V> boolean putLocal(String key, V value, int localExp) {
+	public <V> boolean setLocal(String key, V value) {
+		return setLocal(key, value, DEF_EXP);
+	}
+
+	/**
+	 * {@inheritDoc} <br>
+	 */
+	@Override
+	public <V> boolean setLocal(String key, V value, int localExp) {
 		return localCache.set(key, (Object) value, localExp);
 	}
 
@@ -62,7 +84,15 @@ public class Level2CacheServiceImpl implements Level2CacheService {
 	 * {@inheritDoc} <br>
 	 */
 	@Override
-	public <V> boolean putAmass(String key, V value, int amassExp) {
+	public <V> boolean setAmass(String key, V value) {
+		return setAmass(key, value, DEF_EXP);
+	}
+
+	/**
+	 * {@inheritDoc} <br>
+	 */
+	@Override
+	public <V> boolean setAmass(String key, V value, int amassExp) {
 		return amassCache.set(key, (Object) value, amassExp);
 	}
 
@@ -134,7 +164,7 @@ public class Level2CacheServiceImpl implements Level2CacheService {
 		if (null == v) {
 			v = getAmass(key);
 			if (null != v) {
-				putLocal(key, v, localExp);
+				setLocal(key, v, localExp);
 				notice(key, v);
 			}
 		}
@@ -194,9 +224,9 @@ public class Level2CacheServiceImpl implements Level2CacheService {
 	private <V> boolean set(String key, V value, int localExp, int amassExp) {
 		// 出于性能考虑，先缓存本地，在缓存集中缓存
 		// 本地失败，不会再向集中缓存
-		boolean ok = putLocal(key, value, localExp);
+		boolean ok = setLocal(key, value, localExp);
 		if (ok) {
-			ok = putAmass(key, value, amassExp);
+			ok = setAmass(key, value, amassExp);
 			// 本地成功，集中失败，则本地也删除，告知外部 失败
 			if (!ok)
 				deleteLocal(key);

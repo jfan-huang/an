@@ -13,13 +13,22 @@ import org.jfan.an.cache.BaseCacheService;
  */
 public interface Level2CacheService extends BaseCacheService {
 
+	public BaseCacheService getLocalCache();
+
+	public BaseCacheService getAmassCache();
+
 	// ####
 	// local
 
 	/**
 	 * 向本地缓存中缓存对象
 	 */
-	public <V> boolean putLocal(String key, V value, int localExp);
+	public <V> boolean setLocal(String key, V value);
+
+	/**
+	 * 向本地缓存中缓存对象
+	 */
+	public <V> boolean setLocal(String key, V value, int localExp);
 
 	/**
 	 * 从本地缓存中读取已经缓存的内容
@@ -37,7 +46,12 @@ public interface Level2CacheService extends BaseCacheService {
 	/**
 	 * 向集中缓存（memcached）中缓存对象
 	 */
-	public <V> boolean putAmass(String key, V value, int amassExp);
+	public <V> boolean setAmass(String key, V value);
+
+	/**
+	 * 向集中缓存（memcached）中缓存对象
+	 */
+	public <V> boolean setAmass(String key, V value, int amassExp);
 
 	/**
 	 * 从集中缓存（memcached）中读取已经缓存的内容
