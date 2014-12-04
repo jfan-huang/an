@@ -1,21 +1,17 @@
 package org.jfan.an.track;
 
-import java.util.Date;
-
 import org.jfan.weapon.probability.random.RandomUtil;
 
 public class RunTF implements Track {
 
-	public static int MAX_S = 10;
+	private int seconds;
+	private boolean run, runErr;
+	private boolean err;
 
-	private String name;
-	private int s;
-
-	public RunTF(String name) {
-		this.name = name;
-
-		s = RandomUtil.nextInt(-10, MAX_S);
-		System.out.println("执行时间（x秒后）：" + s + "\t" + name);
+	public RunTF() {
+		int max = AbstractTrackServiceTest.MAX_S;
+		seconds = RandomUtil.nextInt(-max, max);
+		System.out.println("seconds: " + seconds);
 	}
 
 	/**
@@ -24,7 +20,7 @@ public class RunTF implements Track {
 	@Override
 	public long timeMillis() {
 		long n = System.currentTimeMillis();
-		long nn = n + (s * 1000);
+		long nn = n + (seconds * 1000);
 		return nn;
 	}
 
@@ -41,10 +37,14 @@ public class RunTF implements Track {
 	 */
 	@Override
 	public void onRun() {
-		System.out.println(name + " 执行了：" + new Date());
+		run = true;
+		System.out.println(">>Run......" + seconds);
 
-		if (1 == RandomUtil.nextInt(5))
+		if (1 == RandomUtil.nextInt(5)) {
+			runErr = true;
+			// System.out.println("模拟发生异常。");
 			throw new RuntimeException("XXX 模拟发生错误 XXX");
+		}
 	}
 
 	/**
@@ -52,7 +52,38 @@ public class RunTF implements Track {
 	 */
 	@Override
 	public void onError(Exception e) {
-		System.out.println(name + " 发生错误: " + new Date() + " - " + e.getMessage());
+		err = true;
+	}
+
+	// ####
+	// ## get func
+
+	/**
+	 * @return seconds
+	 */
+	public int getSeconds() {
+		return seconds;
+	}
+
+	/**
+	 * @return run
+	 */
+	public boolean isRun() {
+		return run;
+	}
+
+	/**
+	 * @return runErr
+	 */
+	public boolean isRunErr() {
+		return runErr;
+	}
+
+	/**
+	 * @return err
+	 */
+	public boolean isErr() {
+		return err;
 	}
 
 }

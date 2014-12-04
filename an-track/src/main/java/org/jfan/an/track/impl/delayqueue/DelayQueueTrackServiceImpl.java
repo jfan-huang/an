@@ -23,11 +23,13 @@ public class DelayQueueTrackServiceImpl extends AbstractTrackService {
 			@Override
 			public void run() {
 				for (;;) {
-					TraceDelayed track = queue.poll();
-					if (null != track)
-						executor(track.getTrackNode());
-					// else
-					// System.out.println("***********");
+					try {
+						TraceDelayed track = queue.take();
+						executor(track.getTrackNode());// DelayQueue不允许null值
+					} catch (InterruptedException e) {
+						// e.printStackTrace();// ignore
+						// logger
+					}
 				}
 			}
 		});

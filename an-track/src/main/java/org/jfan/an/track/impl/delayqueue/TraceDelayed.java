@@ -31,8 +31,8 @@ public class TraceDelayed implements Delayed {
 	 */
 	@Override
 	public int compareTo(Delayed o) {
-		long nanoIn = (null == o ? 0 : ((TraceDelayed) o).milli);
-		return (milli == nanoIn ? 0 : (milli > nanoIn ? 1 : -1));
+		long milliIn = (null == o ? 0 : ((TraceDelayed) o).milli);
+		return (milli == milliIn ? 0 : (milli > milliIn ? 1 : -1));
 	}
 
 	/*
@@ -42,11 +42,12 @@ public class TraceDelayed implements Delayed {
 	 */
 	@Override
 	public long getDelay(TimeUnit unit) {
-		return TimeUnit.MILLISECONDS.convert(milli, unit);
+		long now = System.currentTimeMillis();
+		return unit.convert(milli - now, TimeUnit.MILLISECONDS);
 	}
 
 	// ####
-	// ## set func
+	// ## get func
 
 	/**
 	 * @return track
